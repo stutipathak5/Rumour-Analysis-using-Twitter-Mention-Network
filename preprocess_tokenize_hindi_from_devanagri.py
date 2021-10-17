@@ -3,12 +3,10 @@ import pandas as pd
 from cltk.tokenize.word import WordTokenizer
 from cltk.stop.classical_hindi.stops import STOPS_LIST
 import demoji
-from polyglot.detect import Detector 
-
-hindi_tweets_data=pd.read_csv('/Users/stutipathak/Networks/hindi/hindi_total.csv')
+from polyglot.detect import Detector
 
 tweet_only=pd.DataFrame(hindi_tweets_data["tweet"])
-tweet_only_list=tweet_only.values.tolist()
+tweet_only_list=tweet_only.values.tolist()[0:20]
 
 tokenizer = WordTokenizer('sanskrit')
 
@@ -42,6 +40,9 @@ for i in stopwords:
     k.append(" " + i + " ")
 
 tokenized_list_from_devanagri_to_hindi_only=[]
+index=[]
+mentions=[]
+username=[]
 for i in range(len(tweet_only_list)):
 
     tweet = tweet_only_list[i]
@@ -67,5 +68,14 @@ for i in range(len(tweet_only_list)):
         detector = Detector(tweet)
         if detector.language.code == 'hi':
             tokenized_list_from_devanagri_to_hindi_only.append(tokenizer.tokenize(tweet))
+            index.append(i)
+            mentions.append(hindi_tweets_data.mentions[i])
+            username.append(hindi_tweets_data.username[i])
+
     except Exception:
         pass
+
+# creating dataset for rumour networks
+a={'index_in_whole_data':index,'only_hindi_tokenized':tokenized_list_from_devanagri_to_hindi_only,'mentions':mentions,'username':username}
+only_hindi_tokenized=pd.DataFrame(data=a)
+only_hindi_tokenized.to_csv('/Users/stutipathak/Networks/hindi/only_hindi_tokenized.csv')
