@@ -81,3 +81,4 @@ for i in range(len(tweet_only_list)):
 a={'index_in_whole_data':index,'only_hindi_tokenized':tokenized_list_from_devanagri_to_hindi_only,'mentions':mentions,'username':username}
 only_hindi_tokenized=pd.DataFrame(data=a)
 only_hindi_tokenized.to_csv('/Users/stutipathak/Networks/hindi/only_hindi_tokenized.csv')
+print(only_hindi_tokenized[0:5])
