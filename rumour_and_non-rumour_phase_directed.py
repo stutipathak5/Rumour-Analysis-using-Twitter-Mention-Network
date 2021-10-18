@@ -107,7 +107,7 @@ non_rumour_nodes = list(set(non_rumour_nodes).symmetric_difference(set(i2)))
 i3 = list(set(non_rumour_nodes2) & set(isolated_nodes))
 non_rumour_nodes2 = list(set(non_rumour_nodes2).symmetric_difference(set(i3)))
 
-phase_info= {'total_no._of_nodes': len(GG.nodes),
+phase_info_whole= {'total_no._of_nodes': len(GG.nodes),
        'total_no._of_isolated_nodes': len(GG) - len(G),
        'total_no._of_edges': len(GG.edges),
        'total_no._of_usernames_who_have_tweeted_rumour': len(rumour_nodes),
@@ -117,4 +117,32 @@ phase_info= {'total_no._of_nodes': len(GG.nodes),
        'total_no._of_rumour_tweets': len(rumour_frame),
        'total_no._of_non_rumour_tweets': len(non_rumour_frame)}
 
-phase_info = pd.DataFrame([phase_info])
+phase_info_whole= pd.DataFrame([phase_info_whole]).T
+
+print(phase_info_whole)
+
+count = 0
+for r in rumour_nodes:
+  count = count + len(G.out_edges(r))
+
+f = G.subgraph(rumour_nodes).copy()
+rumor_to_rumor_edges = f.number_of_edges()
+rumor_to_non_rumor_edges = count - rumor_to_rumor_edges
+
+count2 = 0
+for r in rumour_nodes:
+  count2 += len(G.in_edges(r))
+
+non_rumor_to_rumor_edges = count2 - rumor_to_rumor_edges
+non_rumor_to_non_rumor_edges = G.number_of_edges() - rumor_to_rumor_edges - rumor_to_non_rumor_edges - non_rumor_to_rumor_edges
+
+phase_info_whole_interaction={'no. of connections in between rumour nodes':rumor_to_rumor_edges,
+     'no. of connections in between non rumour nodes':non_rumor_to_non_rumor_edges,
+     'in degree of rumour nodes from non rumour nodes':non_rumor_to_rumor_edges,
+     'out degree of non rumour nodes to rumour nodes':non_rumor_to_rumor_edges,
+     'in degree of non rumour nodes from rumour nodes':rumor_to_non_rumor_edges,
+     'out degree of rumour nodes to non rumour nodes':rumor_to_non_rumor_edges}
+
+phase_info_whole_interaction=pd.DataFrame([phase_info_whole_interaction]).T
+
+print(phase_info_whole_interaction)
