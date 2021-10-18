@@ -8,7 +8,7 @@ from polyglot.detect import Detector
 hindi_tweets_data=pd.read_csv('/Users/stutipathak/Networks/hindi/hindi_total.csv')
 
 tweet_only=pd.DataFrame(hindi_tweets_data["tweet"])
-tweet_only_list=tweet_only.values.tolist()[0:20]
+tweet_only_list=tweet_only.values.tolist()
 
 tokenizer = WordTokenizer('sanskrit')
 
