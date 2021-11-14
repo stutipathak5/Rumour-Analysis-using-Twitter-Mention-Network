@@ -8,7 +8,7 @@ from polyglot.detect import Detector
 hindi_tweets_data=pd.read_csv('/Users/stutipathak/Networks/hindi/hindi_total.csv')
 
 tweet_only=pd.DataFrame(hindi_tweets_data["tweet"])
-tweet_only_list=tweet_only.values.tolist()
+tweet_only_list=tweet_only.values.tolist()                                                          # tweet_only_list is a list of just the Hindi tweets
 
 tokenizer = WordTokenizer('sanskrit')
 
@@ -35,7 +35,7 @@ stopwords=["मैं","मुझको","मेरा","अपने आप क
           'बयान','प्रचार','गए','करनी','पढ़','चलकर','सकेगा','लेकिन','आपके', 'तरीका','लुढ़का','गई','कितने','भेज','हमे','नही','देता','माध्यम',
           'अन्यथा','होगा','आवश्यक','साफ','ऐसी','साबित','डा','हमें','लगे','विज','बाकी','कुछ','नौ','रहे','बेशर्मी','मिल', 'सबको','केवल',
           'कहां','धन्यवाद','क','उच्चस्तरीय','सारी','रोना','समझे','माना','शब्द','फरवरी','जल्दी','तौर','बनाये','कार्य','नगर','भाग','पेट','करेंगे',
-          'यहीं','पिया','विभिन्न','दस','बल','रे','थोड़ा','से','में','ने','रहें','की','लिए','जानेंगे']+STOPS_LIST
+          'यहीं','पिया','विभिन्न','दस','बल','रे','थोड़ा','से','में','ने','रहें','की','लिए','जानेंगे']+STOPS_LIST                                
 
 k=[]
 for i in stopwords:
@@ -50,18 +50,18 @@ for i in range(len(tweet_only_list)):
     tweet = tweet_only_list[i]
     tweet = " " + str(tweet) + " "
 
-    tweet = re.sub('http\S+\s*', '', tweet)
-    tweet = re.sub('RT|cc', '', tweet)
+    tweet = re.sub('http\S+\s*', '', tweet)                                       # removing hashtags, URls, mentions, punctuations
+    tweet = re.sub('RT|cc', '', tweet)                                        
     tweet = re.sub('#\S+', '', tweet)
     tweet = re.sub('@\S+', '', tweet)
     tweet = re.sub('[%s]' % re.escape("""⁦!"#–$‘%’&«'()।*+,-./:;<=>?@[\]^_`{|}~''"""), '', tweet)
 
     for d in k:
-        tweet = re.sub(d, ' ', tweet)
+        tweet = re.sub(d, ' ', tweet)                                             # removing stopwords
 
     tweet = re.sub(' है', ' ', tweet)
     tweet = re.sub(' ं ', ' ', tweet)
-    tweet = re.sub("["u"A-Z"u"a-z"u"0-9"u"०-९""]+", '', tweet)
+    tweet = re.sub("["u"A-Z"u"a-z"u"0-9"u"०-९""]+", '', tweet)                    # removing whitespace, emojis
     tweet = demoji.replace(tweet)
     tweet = re.sub('…', '', tweet)
     tweet = re.sub('\s+', ' ', tweet)
@@ -69,12 +69,12 @@ for i in range(len(tweet_only_list)):
     try:
         detector = Detector(tweet)
         if detector.language.code == 'hi':
-            tokenized_list_from_devanagri_to_hindi_only.append(tokenizer.tokenize(tweet))
+            tokenized_list_from_devanagri_to_hindi_only.append(tokenizer.tokenize(tweet))             
             index.append(i)
             mentions.append(hindi_tweets_data.mentions[i])
             username.append(hindi_tweets_data.username[i])
 
-    except Exception:
+    except Exception:                                                             # removing errors that come from non-interpretable tweets
         pass
 
 # creating dataset for rumour networks
